@@ -5,6 +5,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { action, email, name } = body;
     //password ekleme işi
+    //selamün aleyküm
 
     console.log(`Auth request: ${action} for ${email} with name ${name || 'N/A'}`);
 
