@@ -1,10 +1,12 @@
-import NextAuth, { AuthOptions } from "next-auth";
+import NextAuth, { AuthOptions, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 
-// Mock user database (Replace this with real database later)
-const users = [
-  { id: "1", name: "John Doe", email: "john@example.com", password: bcrypt.hashSync("password123", 10) }
+// Mock user database (Replace this with a real database later)
+const users: User[] = [
+  { id: "1", name: "John Doe", email: "john@example.com", password: bcrypt.hashSync("password123", 10), role: "admin" },
+  { id: "2", name: "Alice Dev", email: "alice@example.com", password: bcrypt.hashSync("devpass", 10), role: "developer" },
+  { id: "3", name: "Bob Tester", email: "bob@example.com", password: bcrypt.hashSync("testpass", 10), role: "tester" },
 ];
 
 export const authOptions: AuthOptions = {
@@ -15,7 +17,7 @@ export const authOptions: AuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials): Promise<User | null> {
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
@@ -25,19 +27,37 @@ export const authOptions: AuthOptions = {
         if (!user) return null;
 
         // Verify password
-        const isValidPassword = bcrypt.compareSync(credentials.password, user.password);
+        const isValidPassword = bcrypt.compareSync(credentials.password, user.password!);
+
         if (!isValidPassword) return null;
 
-        return { id: user.id, name: user.name, email: user.email };
-      },
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+      };      },
     }),
   ],
   pages: {
-    signIn: "/login", // Custom login page
+    signIn: "/login",
   },
-  session: {
-    strategy: "jwt",
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.role = user.role; 
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.role = token.role as "admin" | "developer" | "tester"; 
+      }
+      return session;
+    },
   },
+  session: { strategy: "jwt" },
   secret: process.env.NEXTAUTH_SECRET,
 };
 
