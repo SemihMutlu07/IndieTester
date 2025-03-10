@@ -63,7 +63,7 @@ export default function GameManager() {
       <ul>
         {games.map((game) => (
           <li key={game.id} className="mb-2 border p-2">
-            <span className="mr-2">{game.name} - {game.genre} (Sahip: {game.ownerId})</span>
+            <span className="mr-2">{game.name} - {game.genre} (Ekleyen: {game.ownerId})</span>
             <button
               className="bg-red-500 text-white p-1 mr-2"
               onClick={() => deleteGame(game.id)}
