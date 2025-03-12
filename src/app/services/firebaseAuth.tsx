@@ -2,8 +2,6 @@ import { auth, googleProvider } from "./firebase";
 import { createUserWithEmailAndPassword, signInWithPopup, signOut, signInWithEmailAndPassword} from "firebase/auth";
 import { addNewUser } from "./userServices";
 
-const firebaseAuth = ()=>{}
-
     //Giriş yap, kullanıcıyı ekle
     export const signUp = async (email: string, password: string) => {
         try{
