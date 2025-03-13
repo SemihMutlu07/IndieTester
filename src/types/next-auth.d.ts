@@ -10,6 +10,20 @@ declare module "next-auth" {
     } & DefaultSession["user"];
   }
 
+  type Developer = {
+    id: number;
+    name: string;
+    email: string;
+    status: "pending" | "approved" | "rejected";
+  };
+
+  type Game = {
+    id: number;
+    name: string;
+    description: string;
+    status: "pending" | "approved" | "rejected";
+  };
+
   interface User {
     id: string;
     name: string;
