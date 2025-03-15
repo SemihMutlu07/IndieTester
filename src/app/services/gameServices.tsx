@@ -1,6 +1,5 @@
 import { db, auth } from "./firebase";
 import { getDocs, collection, addDoc, deleteDoc, doc, updateDoc} from "firebase/firestore"
-import { useMemo } from 'react';
 
 export const gameCollectionRef = collection(db, "games");
 
@@ -9,9 +8,22 @@ export const gameCollectionRef = collection(db, "games");
     export const getGameList = async () => {
 
       try{
-      const data = await getDocs(gameCollectionRef); //colllection referansından ilgili dokümanları alıyor.
-      const filteredData = data.docs.map((doc) => ({...doc.data(), id: doc.id})); {/*Bu dokümanlarla yeni bir dizi*/}
+      //const data = await getDocs(gameCollectionRef); //colllection referansından ilgili dokümanları alıyor.
+      //const filteredData = data.docs.map((doc) => ({...doc.data(), id: doc.id})); {/*Bu dokümanlarla yeni bir dizi*/}
+      //return filteredData;
+      //}
+      const data = await getDocs(gameCollectionRef); // Koleksiyonun tüm dokümanlarını al
+      const filteredData = data.docs.map((doc) => {
+        const docData = doc.data(); 
+        return {
+          id: doc.id, 
+          title: docData.title, 
+          explanation: docData.explanation, 
+          publishDate: docData.publishDate, 
+        };
+      });
       return filteredData;
+
       }
 
       catch (err){

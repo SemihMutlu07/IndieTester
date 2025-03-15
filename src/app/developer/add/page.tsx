@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { db } from '../../services/firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import { addNewGame } from "@/app/services/gameServices"; 
 
 export default function AddGamePage() {
   const [name, setName] = useState("");
@@ -13,14 +12,16 @@ export default function AddGamePage() {
     e.preventDefault(); 
     setLoading(true);
     try {
-      await addDoc(collection(db, "games"), {
-        name,
-        description,
-        createdAt: new Date().toISOString(),
-      });
+      //await addDoc(collection(db, "games"), {
+      //  name,
+      //  description,
+      //  createdAt: new Date().toISOString(),
+      //});
+      //alert("Game Added successfully!");
+      //setName("");
+      //setDescription("");
       alert("Game Added successfully!");
-      setName("");
-      setDescription("");
+      addNewGame(name,description); //Hazır service fonksiyonu ile değiştirildi
     } catch (error) {
       console.error("Error adding game: ", error);
       alert("Failed to add game.");

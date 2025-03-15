@@ -18,10 +18,10 @@ declare module "next-auth" {
   };
 
   type Game = {
-    id: number;
-    name: string;
-    description: string;
-    status: "pending" | "approved" | "rejected";
+    id: string;
+    title: string;
+    explanation: string;
+    publishDate: string;
   };
 
   interface User {
