@@ -1,56 +1,29 @@
-"use client";  // ✅ Add this at the top
+"use client";
 
-import { signIn } from "next-auth/react";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { auth } from '../services/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
-export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const router = useRouter();  // ✅ No more errors after this fix!
+export default function DeveloperRole() {
+  const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        router.push("/login");
+      } 
     });
-
-    if (result?.error) {
-      setError("Invalid email or password");
-    } else {
-      router.push("/protected"); // Redirect after login
-    }
-  };
-
+    return () => unsubscribe(); 
+  }, [router]);
+  
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">Login</h1>
-      {error && <p className="text-red-500">{error}</p>}
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className="p-2 border rounded"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          className="p-2 border rounded"
-        />
-        <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-          Login
-        </button>
-      </form>
+    <div className='p-6'>
+      <h1 className='text-2xl font-bold mb-4'>Developer Dashboard</h1>
+      <p>Manage your games here.</p>
+      <a href="/developer/add" className='bg-blue-500 text-white px-4 py-2 rounded mt-4 inline-block'>
+        Add New Game
+      </a>
     </div>
   );
 }
