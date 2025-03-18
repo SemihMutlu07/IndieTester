@@ -1,6 +1,6 @@
 "use client";
 
-export default function DeveloperRole() {
+export default function RegisterPage() {
 
   return (
     <div className='p-6'>

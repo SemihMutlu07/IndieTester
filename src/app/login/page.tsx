@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { auth } from '../services/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
-export default function DeveloperRole() {
+export default function LoginPage() {
   const router = useRouter();
 
   useEffect(() => {
