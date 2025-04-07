@@ -1,10 +1,19 @@
 "use client";
 
-import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import {useEffect, useState} from 'react';
+import {auth} from '../services/firebase';
+import { onAuthStateChanged, signOut, User } from "firebase/auth";
 
 export default function Navbar() {
-  const { data: session } = useSession();
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe(); // value declared but never used hatasını böyle çözebildik, çünkü şu an read
+  }, []);
 
   return (
     <nav className="flex justify-between items-center p-4 bg-gray-900 text-white shadow-lg">
@@ -15,58 +24,34 @@ export default function Navbar() {
 
       {/* Navigation Links */}
       <div className="flex gap-6 items-center">
-        {session && (
+        {user && (
           <>
-            {session.user?.role === "admin" && (
-              <Link
-                href="/admin"
-                className="hover:text-blue-400 transition"
-              >
-                Admin Dashboard
-              </Link>
-            )}
-
-            {session.user?.role === "developer" && (
-              <Link
-                href="/developer"
-                className="hover:text-blue-400 transition"
-              >
-                Developer Dashboard
-              </Link>
-            )}
-
-            {session.user?.role === "tester" && (
-              <Link
-                href="/tester"
-                className="hover:text-blue-400 transition"
-              >
-                Tester Panel
-              </Link>
-            )}
+            <Link href="/tester" className="hover:text-blue-400 transition">
+              Tester Panel
+            </Link>
+            <Link href="/developer" className="hover:text-blue-400 transition">
+              Developer Dashboard
+            </Link>
           </>
         )}
 
         {/* Auth Section */}
-        {session ? (
+        {user ? (
           <div className="flex items-center gap-4">
             <p className="text-sm">
-              Welcome, <span className="font-semibold">{session.user?.name}</span> (
-              {session.user?.role})
+              Welcome, <span className="font-semibold">{user.email}</span>
             </p>
             <button
-              onClick={() => signOut({ callbackUrl: "/" })}
+              onClick={() => signOut(auth)}
               className="bg-red-500 hover:bg-red-600 transition px-3 py-1 rounded text-sm"
             >
               Logout
             </button>
           </div>
         ) : (
-          <button
-            onClick={() => signIn()}
-            className="bg-blue-500 hover:bg-blue-600 transition px-3 py-1 rounded text-sm"
-          >
+          <Link href="/login" className="bg-blue-500 hover:bg-blue-700 transition px-3 py-1 rounded text-sm">
             Login
-          </button>
+          </Link>
         )}
       </div>
     </nav>

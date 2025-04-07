@@ -6,59 +6,32 @@
 
 "use client"
 import { useRouter } from "next/navigation";
-import React, { useState } from 'react';
-import { signUp, signIn, logOut } from './services/firebaseAuth';
-import { auth } from "./services/firebase";
+import React from 'react';
 
 export default function HomePage() {
-  
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const router = useRouter();
-  
+
+  const handleJoinClick = () => {
+    router.push("/login");
+  };
+
   return (
-    <div className="h-screen flex flex-col justify-center items-center bg-accent text-deep-dark p-6">
-      <h1 className="text-4xl font-bold mb-6">Welcome to Indie Tester!</h1>
+    <div className="min-h-screen flex flex-col justify-center items-center bg-accent text-deep-dark p-6 text-center">
+      <h1 className="text-5xl font-extrabold mb-4">Welcome to Indie Tester!</h1>
+      <p className="text-lg max-w-xl mb-8">
+        Discover. Test. Build. A new way for indie developers and passionate gamers to connect, test, and improve the next generation of games.
+      </p>
 
-      <div className="flex gap-4">
-          <button className="bg-primary text-white px-6 py-2 rounded hover:bg-secondary transition"
-          onClick={()=> signIn(email,password, router)
-
-          }>
-            Login
-          </button>
-          
-          <button className="bg-dark text-white px-6 py-2 rounded hover:bg-deep-dark transition"
-          onClick={()=> signUp(email,password, router)}>
-            Register
-          </button>
+      <div className="w-full max-w-md h-64 bg-deep-dark rounded-lg mb-8 flex items-center justify-center text-white text-xl">
+        Image Placeholder
       </div>
 
-      <input
-            type="email"
-            placeholder="E-mail"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          
-        
-          <button className="bg-dark text-white px-6 py-2 rounded hover:bg-deep-dark transition"
-        onClick={()=> logOut()}>
-            Log Out
-          </button>
-
-        {auth.currentUser!=null ? (
-        <div>
-          User Email: {auth.currentUser?.email} {/* DEBUG İÇİN */}
-        </div>) : null
-        }
+      <button
+        className="bg-primary text-white px-8 py-3 rounded-xl text-lg font-semibold hover:bg-secondary transition"
+        onClick={handleJoinClick}
+      >
+        Join Indie Tester!
+      </button>
     </div>
-    
   );
 }
